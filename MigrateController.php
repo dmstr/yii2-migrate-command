@@ -127,10 +127,6 @@ class MigrateController extends Controller
     {
         if (parent::beforeAction($action)) {
             $path = Yii::getAlias($this->migrationPath);
-            if (!is_dir($path)) {
-                echo "";
-                FileHelper::createDirectory($path);
-            }
 
             if ($action->id !== 'create') {
                 if (is_string($this->db)) {
@@ -138,6 +134,11 @@ class MigrateController extends Controller
                 }
                 if (!$this->db instanceof Connection) {
                     throw new Exception("The 'db' option must refer to the application component ID of a DB connection.");
+                }
+            } else {
+                if (!is_dir($path)) {
+                    echo "\n$path does not exist, creating...";
+                    FileHelper::createDirectory($path);
                 }
             }
 
@@ -520,7 +521,7 @@ class MigrateController extends Controller
 
         if ($this->confirm("Create new migration '$file'?")) {
             $content = $this->renderFile(Yii::getAlias($this->templateFile), ['className' => $name]);
-            file_put_contents($file, $content);
+            file_put_contents(Yii::getAlias($file), $content);
             echo "New migration created successfully.\n";
         }
     }
