@@ -23,19 +23,19 @@ Usage
 Configure the command in your `main` application configuration:
 
 ```php
-    'controllerMap'       => [
-        'migrate' => [
-            'class' => 'dmstr\console\controllers\MigrateController'
-        ],
+'controllerMap'       => [
+    'migrate' => [
+        'class' => 'dmstr\console\controllers\MigrateController'
     ],
+],
 ```
 
 Add additional migration paths via application `params`:
 
 ```php
-    "yii.migrations"=> [
-        "@dektrium/user/migrations",
-    ],
+"yii.migrations"=> [
+    "@dektrium/user/migrations",
+],
 ```
 
 Once the extension is installed and configured, simply use it on your command line:
