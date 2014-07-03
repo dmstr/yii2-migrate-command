@@ -1,8 +1,10 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.diemeisterei.de/
+ * @copyright Copyright (c) 2014 diemeisterei GmbH, Stuttgart
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace dmstr\console\controllers;
@@ -16,7 +18,9 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 
 /**
- * Manages application migrations. Spin-off from https://github.com/yiisoft/yii2/pull/3273/files
+ * Manages application and extension migrations.
+ *
+ * Spin-off from https://github.com/yiisoft/yii2/pull/3273/files
  *
  * A migration means a set of persistent changes to the application environment
  * that is shared among different developers. For example, in an application
@@ -34,9 +38,12 @@ use yii\helpers\FileHelper;
  * ~~~
  * CREATE TABLE migration (
  *     version varchar(180) PRIMARY KEY,
+ *     version alias(180),
  *     apply_time integer
  * )
  * ~~~
+ *
+ * You may configure additional migration paths using the application param `yii.migrations`
  *
  * Below are some common usages of this command:
  *
@@ -53,7 +60,7 @@ use yii\helpers\FileHelper;
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @author Tobias Munk <schmunk@usrbin.de>
- * @since 2.0
+ * @since 1.0
  */
 class MigrateController extends Controller
 {
