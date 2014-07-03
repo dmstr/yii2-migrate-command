@@ -2,7 +2,7 @@
 	"name": "dmstr/yii2-migrate-command",
 	"description": "Console Migration Command with multiple paths/aliases support",
 	"type": "yii2-extension",
-	"keywords": "["yii2","extension","migration","command","console"]",
+	"keywords": ["yii2","extension","migration","command","console"],
 	"license": "BSD-3-Clause",
 	"authors": [
 		{
@@ -12,7 +12,7 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"dmstr\\console\\commands\\": ""
+			"dmstr\\console\\controllers\\": ""
 		}
 	}
 }
