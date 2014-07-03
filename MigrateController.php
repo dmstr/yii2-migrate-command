@@ -117,7 +117,9 @@ class MigrateController extends Controller
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
      * It checks the existence of the [[migrationPath]].
+     *
      * @param \yii\base\Action $action the action to be executed.
+     *
      * @throws Exception if db component isn't configured
      * @return boolean whether the action should continue to be executed.
      */
@@ -141,7 +143,7 @@ class MigrateController extends Controller
 
             $version = Yii::getVersion();
             echo "Yii Migration Tool (based on Yii v{$version})\n\n";
-            echo "Database Connection: ".\Yii::$app->db->dsn."\n\n";
+            echo "Database Connection: " . \Yii::$app->db->dsn . "\n\n";
             return true;
         } else {
             return false;
@@ -170,7 +172,7 @@ class MigrateController extends Controller
         }
 
         $total = count($migrations);
-        $limit = (int) $limit;
+        $limit = (int)$limit;
         if ($limit > 0) {
             $migrations = array_slice($migrations, 0, $limit);
         }
@@ -184,11 +186,11 @@ class MigrateController extends Controller
 
         echo "\nLookup:\n";
         foreach (array_unique($migrations) as $migration => $alias) {
-            echo "    ".$alias." (".\Yii::getAlias($alias).")\n";
+            echo "    " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
         }
         echo "\nMigrations:\n";
         foreach ($migrations as $migration => $alias) {
-            echo "    ".$migration." (".$alias.")\n";
+            echo "    " . $migration . " (" . $alias . ")\n";
         }
 
         if ($this->confirm('Apply the above ' . ($n === 1 ? 'migration' : 'migrations') . "?")) {
@@ -214,11 +216,12 @@ class MigrateController extends Controller
      *
      * @param integer $limit the number of migrations to be reverted. Defaults to 1,
      * meaning the last applied migration will be reverted.
+     *
      * @throws Exception if the number of the steps specified is less than 1.
      */
     public function actionDown($limit = 1)
     {
-        $limit = (int) $limit;
+        $limit = (int)$limit;
         if ($limit < 1) {
             throw new Exception("The step argument must be greater than 0.");
         }
@@ -233,7 +236,7 @@ class MigrateController extends Controller
         $n = count($migrations);
         echo "Total $n " . ($n === 1 ? 'migration' : 'migrations') . " to be reverted:\n";
         foreach ($migrations as $migration => $info) {
-            echo "    $migration (".$info['alias'].")\n";
+            echo "    $migration (" . $info['alias'] . ")\n";
         }
         echo "\n";
 
@@ -262,11 +265,12 @@ class MigrateController extends Controller
      *
      * @param integer $limit the number of migrations to be redone. Defaults to 1,
      * meaning the last applied migration will be redone.
+     *
      * @throws Exception if the number of the steps specified is less than 1.
      */
     public function actionRedo($limit = 1)
     {
-        $limit = (int) $limit;
+        $limit = (int)$limit;
         if ($limit < 1) {
             throw new Exception("The step argument must be greater than 0.");
         }
@@ -325,13 +329,14 @@ class MigrateController extends Controller
      * that the application should be migrated to. This can be either the timestamp,
      * the full name of the migration, the UNIX timestamp, or the parseable datetime
      * string.
+     *
      * @throws Exception if the version argument is invalid.
      */
     public function actionTo($version)
     {
         if (preg_match('/^m?(\d{6}_\d{6})(_.*?)?$/', $version, $matches)) {
             $this->migrateToVersion('m' . $matches[1]);
-        } elseif ((string) (int) $version == $version) {
+        } elseif ((string)(int)$version == $version) {
             $this->migrateToTime($version);
         } elseif (($time = strtotime($version)) !== false) {
             $this->migrateToTime($time);
@@ -352,6 +357,7 @@ class MigrateController extends Controller
      *
      * @param string $version the version at which the migration history should be marked.
      * This can be either the timestamp or the full name of the migration.
+     *
      * @throws Exception if the version argument is invalid or the version cannot be found.
      */
     public function actionMark($version)
@@ -365,18 +371,21 @@ class MigrateController extends Controller
 
         // try mark up
         $migrations = $this->getNewMigrations();
-        $i = 0;
+        $i          = 0;
         foreach ($migrations as $migration => $alias) {
             $stack[] = $migration;
             if (strpos($migration, $version . '_') === 0) {
                 if ($this->confirm("Set migration history at $originalVersion?")) {
                     $command = $this->db->createCommand();
                     foreach ($stack AS $applyMigration) {
-                        $command->insert($this->migrationTable, [
-                                                                  'version' => $applyMigration,
-                                                                  'alias' => $alias,
-                                                                  'apply_time' => time(),
-                                                              ])->execute();
+                        $command->insert(
+                            $this->migrationTable,
+                            [
+                                'version'    => $applyMigration,
+                                'alias'      => $alias,
+                                'apply_time' => time(),
+                            ]
+                        )->execute();
                     }
                     echo "The migration history is set at $originalVersion.\nNo actual migration was performed.\n";
                 }
@@ -396,9 +405,12 @@ class MigrateController extends Controller
                     if ($this->confirm("Set migration history at $originalVersion?")) {
                         $command = $this->db->createCommand();
                         for ($j = 0; $j < $i; ++$j) {
-                            $command->delete($this->migrationTable, [
-                                                                      'version' => $migrations[$j],
-                                                                  ])->execute();
+                            $command->delete(
+                                $this->migrationTable,
+                                [
+                                    'version' => $migrations[$j],
+                                ]
+                            )->execute();
                         }
                         echo "The migration history is set at $originalVersion.\nNo actual migration was performed.\n";
                     }
@@ -428,7 +440,7 @@ class MigrateController extends Controller
      */
     public function actionHistory($limit = 10)
     {
-        $limit = (int) $limit;
+        $limit      = (int)$limit;
         $migrations = $this->getMigrationHistory($limit);
         if (empty($migrations)) {
             echo "No migration has been done before.\n";
@@ -462,7 +474,7 @@ class MigrateController extends Controller
      */
     public function actionNew($limit = 10)
     {
-        $limit = (int) $limit;
+        $limit      = (int)$limit;
         $migrations = $this->getNewMigrations();
         if (empty($migrations)) {
             echo "No new migrations found. Your system is up-to-date.\n";
@@ -494,6 +506,7 @@ class MigrateController extends Controller
      *
      * @param string $name the name of the new migration. This should only contain
      * letters, digits and/or underscores.
+     *
      * @throws Exception if the name argument is invalid.
      */
     public function actionCreate($name)
@@ -514,7 +527,9 @@ class MigrateController extends Controller
 
     /**
      * Upgrades with the specified migration class.
+     *
      * @param string $class the migration class name
+     *
      * @return boolean whether the migration is successful
      */
     protected function migrateUp($class, $alias)
@@ -524,14 +539,17 @@ class MigrateController extends Controller
         }
 
         echo "*** applying $class\n";
-        $start = microtime(true);
+        $start     = microtime(true);
         $migration = $this->createMigration($class, $alias);
         if ($migration->up() !== false) {
-            $this->db->createCommand()->insert($this->migrationTable, [
-                                                                        'version' => $class,
-                                                                        'alias' => $alias,
-                                                                        'apply_time' => time(),
-                                                                    ])->execute();
+            $this->db->createCommand()->insert(
+                $this->migrationTable,
+                [
+                    'version'    => $class,
+                    'alias'      => $alias,
+                    'apply_time' => time(),
+                ]
+            )->execute();
             $time = microtime(true) - $start;
             echo "*** applied $class (time: " . sprintf("%.3f", $time) . "s)\n\n";
 
@@ -546,7 +564,9 @@ class MigrateController extends Controller
 
     /**
      * Downgrades with the specified migration class.
+     *
      * @param string $class the migration class name
+     *
      * @return boolean whether the migration is successful
      */
     protected function migrateDown($class, $alias)
@@ -556,12 +576,15 @@ class MigrateController extends Controller
         }
 
         echo "*** reverting $class\n";
-        $start = microtime(true);
+        $start     = microtime(true);
         $migration = $this->createMigration($class, $alias);
         if ($migration->down() !== false) {
-            $this->db->createCommand()->delete($this->migrationTable, [
-                                                                        'version' => $class,
-                                                                    ])->execute();
+            $this->db->createCommand()->delete(
+                $this->migrationTable,
+                [
+                    'version' => $class,
+                ]
+            )->execute();
             $time = microtime(true) - $start;
             echo "*** reverted $class (time: " . sprintf("%.3f", $time) . "s)\n\n";
 
@@ -576,24 +599,27 @@ class MigrateController extends Controller
 
     /**
      * Creates a new migration instance.
+     *
      * @param string $class the migration class name
+     *
      * @return \yii\db\Migration the migration instance
      */
     protected function createMigration($class, $alias)
     {
         $file = $class . '.php';
-        require_once(\Yii::getAlias($alias).'/'.$file);
+        require_once(\Yii::getAlias($alias) . '/' . $file);
 
         return new $class(['db' => $this->db]);
     }
 
     /**
      * Migrates to the specified apply time in the past.
+     *
      * @param integer $time UNIX timestamp value.
      */
     protected function migrateToTime($time)
     {
-        $count = 0;
+        $count      = 0;
         $migrations = array_values($this->getMigrationHistory(-1));
         while ($count < count($migrations) && $migrations[$count] > $time) {
             ++$count;
@@ -607,7 +633,9 @@ class MigrateController extends Controller
 
     /**
      * Migrates to the certain version.
+     *
      * @param string $version name in the full format.
+     *
      * @throws Exception if the provided version cannot be found.
      */
     protected function migrateToVersion($version)
@@ -616,7 +644,7 @@ class MigrateController extends Controller
 
         // try migrate up
         $migrations = $this->getNewMigrations();
-        $i = 0;
+        $i          = 0;
         foreach ($migrations as $migration => $alias) {
             if (strpos($migration, $version . '_') === 0) {
                 $this->actionUp($i + 1);
@@ -645,7 +673,9 @@ class MigrateController extends Controller
 
     /**
      * Returns the migration history.
+     *
      * @param integer $limit the maximum number of records in the history to be returned
+     *
      * @return array the migration history
      */
     protected function getMigrationHistory($limit)
@@ -653,16 +683,16 @@ class MigrateController extends Controller
         if ($this->db->schema->getTableSchema($this->migrationTable, true) === null) {
             $this->createMigrationHistoryTable();
         }
-        $query = new Query;
-        $rows = $query->select(['version', 'alias', 'apply_time'])
+        $query   = new Query;
+        $rows    = $query->select(['version', 'alias', 'apply_time'])
             ->from($this->migrationTable)
             ->orderBy('version DESC')
             ->limit($limit)
             ->createCommand($this->db)
             ->queryAll();
         $history = ArrayHelper::map($rows, 'version', 'apply_time');
-        foreach($rows AS $row) {
-            $history[$row['version']] = ['apply_time'=>$row['apply_time'],'alias'=>$row['alias']];
+        foreach ($rows AS $row) {
+            $history[$row['version']] = ['apply_time' => $row['apply_time'], 'alias' => $row['alias']];
         }
 
         unset($history[self::BASE_MIGRATION]);
@@ -676,16 +706,22 @@ class MigrateController extends Controller
     {
         $tableName = $this->db->schema->getRawTableName($this->migrationTable);
         echo "Creating migration history table \"$tableName\"...";
-        $this->db->createCommand()->createTable($this->migrationTable, [
-                                                                         'version' => 'varchar(180) NOT NULL PRIMARY KEY',
-                                                                         'alias' => 'varchar(180) NOT NULL',
-                                                                         'apply_time' => 'integer',
-                                                                     ])->execute();
-        $this->db->createCommand()->insert($this->migrationTable, [
-                                                                    'version' => self::BASE_MIGRATION,
-                                                                    'alias' => $this->migrationPath,
-                                                                    'apply_time' => time(),
-                                                                ])->execute();
+        $this->db->createCommand()->createTable(
+            $this->migrationTable,
+            [
+                'version'    => 'varchar(180) NOT NULL PRIMARY KEY',
+                'alias'      => 'varchar(180) NOT NULL',
+                'apply_time' => 'integer',
+            ]
+        )->execute();
+        $this->db->createCommand()->insert(
+            $this->migrationTable,
+            [
+                'version'    => self::BASE_MIGRATION,
+                'alias'      => $this->migrationPath,
+                'apply_time' => time(),
+            ]
+        )->execute();
         echo "done.\n";
     }
 
@@ -701,14 +737,14 @@ class MigrateController extends Controller
         }
 
         if (isset(\Yii::$app->params['yii.migrations'])) {
-            $this->migrationLookup = ArrayHelper::merge($this->migrationLookup,\Yii::$app->params['yii.migrations']);
+            $this->migrationLookup = ArrayHelper::merge($this->migrationLookup, \Yii::$app->params['yii.migrations']);
         }
 
         $directories = ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
 
         $migrations = [];
         foreach ($directories AS $alias) {
-            $dir = Yii::getAlias($alias);
+            $dir    = Yii::getAlias($alias);
             $handle = opendir($dir);
             while (($file = readdir($handle)) !== false) {
                 if ($file === '.' || $file === '..') {
