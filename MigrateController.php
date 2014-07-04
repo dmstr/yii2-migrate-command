@@ -517,7 +517,7 @@ class MigrateController extends Controller
         }
 
         $name = 'm' . gmdate('ymd_His') . '_' . $name;
-        $file = $this->migrationPath . DIRECTORY_SEPARATOR . $name . '.php';
+        $file = Yii::getAlias($this->migrationPath) . DIRECTORY_SEPARATOR . $name . '.php';
 
         if ($this->confirm("Create new migration '$file'?")) {
             $content = $this->renderFile(Yii::getAlias($this->templateFile), ['className' => $name]);
