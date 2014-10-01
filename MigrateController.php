@@ -144,7 +144,7 @@ class MigrateController extends Controller
 
             $version = Yii::getVersion();
             echo "Yii Migration Tool (based on Yii v{$version})\n\n";
-            echo "Database Connection: " . \Yii::$app->db->dsn . "\n\n";
+            echo "Database Connection: " . $this->db->dsn . "\n\n";
             return true;
         } else {
             return false;
