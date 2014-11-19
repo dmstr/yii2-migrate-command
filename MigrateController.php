@@ -145,7 +145,7 @@ class MigrateController extends Controller
             $version = Yii::getVersion();
             echo "Yii Migration Tool (based on Yii v{$version})\n\n";
             if (isset($this->db->dsn)) {
-                echo "Database Connection: " . $this->db->dsn . "\n\n";
+                echo "Database Connection: " . $this->db->dsn . "\n";
             }
             return true;
         } else {
@@ -187,10 +187,6 @@ class MigrateController extends Controller
             echo "Total $n out of $total new " . ($total === 1 ? 'migration' : 'migrations') . " to be applied:\n";
         }
 
-        echo "\nLookup:\n";
-        foreach (array_unique($migrations) as $migration => $alias) {
-            echo "    " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
-        }
         echo "\nMigrations:\n";
         foreach ($migrations as $migration => $alias) {
             echo "    " . $migration . " (" . $alias . ")\n";
@@ -746,6 +742,9 @@ class MigrateController extends Controller
         $directories = ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
 
         $migrations = [];
+
+        echo "\nLookup:\n";
+
         foreach ($directories AS $alias) {
             $dir    = Yii::getAlias($alias);
             $handle = opendir($dir);
@@ -762,8 +761,11 @@ class MigrateController extends Controller
                 }
             }
             closedir($handle);
+            echo "    " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
         }
         ksort($migrations);
+
+        echo "\n";
 
         return $migrations;
     }
