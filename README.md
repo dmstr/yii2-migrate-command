@@ -41,10 +41,10 @@ Add additional migration paths via application `params`:
 You can also add migrations in your module bootstrap process:
 
 ```
-    public function bootstrap($app)
-    {
-        $app->params['yii.migrations'][] = '@vendorname/packagename/migrations';
-    }
+public function bootstrap($app)
+{
+    $app->params['yii.migrations'][] = '@vendorname/packagename/migrations';
+}
 ```    
 
 Once the extension is installed and configured, simply use it on your command line:
