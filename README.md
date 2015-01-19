@@ -47,8 +47,14 @@ public function bootstrap($app)
 }
 ```    
 
-Once the extension is installed and configured, simply use it on your command line:
+Once the extension is installed and configured, simply use it on your command line
 
 ```
 ./yii migrate
+```
+
+If you want to specify an additional path directly with the command, use
+
+```
+./yii migrate --migrationLookup=@somewhere/migrations/data1,@somewhere/migrations/data2
 ```
