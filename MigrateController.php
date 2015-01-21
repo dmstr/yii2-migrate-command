@@ -372,16 +372,16 @@ class MigrateController extends Controller
         $migrations = $this->getNewMigrations();
         $i          = 0;
         foreach ($migrations as $migration => $alias) {
-            $stack[] = $migration;
+            $stack[$migration] = $alias;
             if (strpos($migration, $version . '_') === 0) {
                 if ($this->confirm("Set migration history at $originalVersion?")) {
                     $command = $this->db->createCommand();
-                    foreach ($stack AS $applyMigration) {
+                    foreach ($stack AS $applyMigration => $applyAlias) {
                         $command->insert(
                             $this->migrationTable,
                             [
                                 'version'    => $applyMigration,
-                                'alias'      => $alias,
+                                'alias'      => $applyAlias,
                                 'apply_time' => time(),
                             ]
                         )->execute();
