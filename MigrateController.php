@@ -83,6 +83,10 @@ class MigrateController extends Controller
      */
     public $migrationLookup = [];
     /**
+     * @var array additional aliases of migration directories
+     */
+    public $disableLookup = false;
+    /**
      * @var string the name of the table for keeping applied migration information.
      */
     public $migrationTable = '{{%migration}}';
@@ -109,7 +113,7 @@ class MigrateController extends Controller
     {
         return array_merge(
             parent::options($actionId),
-            ['migrationPath', 'migrationLookup', 'migrationTable', 'db'], // global for all actions
+            ['migrationPath', 'migrationLookup', 'disableLookup', 'migrationTable', 'db'], // global for all actions
             ($actionId == 'create') ? ['templateFile'] : [] // action create
         );
     }
@@ -739,7 +743,11 @@ class MigrateController extends Controller
             $this->migrationLookup = ArrayHelper::merge($this->migrationLookup, \Yii::$app->params['yii.migrations']);
         }
 
-        $directories = ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
+        if ($this->migrationPath && $this->disableLookup) {
+            $directories = [$this->migrationPath];
+        } else {
+            $directories = ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
+        }
 
         $migrations = [];
 
