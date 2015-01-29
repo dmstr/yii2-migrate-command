@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 
 /**
- * Manages application and extension migrations.
+ * Manages application and extension migrations (dmstr/yii2-migrate-command).
  *
  * Spin-off from https://github.com/yiisoft/yii2/pull/3273/files
  *
