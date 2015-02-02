@@ -30,6 +30,13 @@ Configure the command in your `main` application configuration:
 ],
 ```
 
+Once the extension is installed and configured, simply use it on your command line
+
+```
+./yii migrate
+```
+
+
 ### Adding migrations via application configuration
 
 Add additional migration paths via application `params`:
@@ -39,13 +46,6 @@ Add additional migration paths via application `params`:
     "@dektrium/user/migrations",
 ],
 ```
-
-Once the extension is installed and configured, simply use it on your command line
-
-```
-./yii migrate
-```
-
 
 ### Adding migrations via extension `bootstrap()`
 
