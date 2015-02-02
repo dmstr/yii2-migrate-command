@@ -22,7 +22,7 @@ Usage
 
 Configure the command in your `main` application configuration:
 
-```php
+```
 'controllerMap'       => [
     'migrate' => [
         'class' => 'dmstr\console\controllers\MigrateController'
@@ -30,13 +30,24 @@ Configure the command in your `main` application configuration:
 ],
 ```
 
+### Adding migrations via application configuration
+
 Add additional migration paths via application `params`:
 
-```php
+```
 "yii.migrations"=> [
     "@dektrium/user/migrations",
 ],
 ```
+
+Once the extension is installed and configured, simply use it on your command line
+
+```
+./yii migrate
+```
+
+
+### Adding migrations via extension `bootstrap()`
 
 You can also add migrations in your module bootstrap process:
 
@@ -47,11 +58,7 @@ public function bootstrap($app)
 }
 ```    
 
-Once the extension is installed and configured, simply use it on your command line
-
-```
-./yii migrate
-```
+### Adding migrations via command parameter
 
 If you want to specify an additional path directly with the command, use
 
