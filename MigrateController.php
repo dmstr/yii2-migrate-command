@@ -83,7 +83,7 @@ class MigrateController extends Controller
      */
     public $migrationLookup = [];
     /**
-     * @var array additional aliases of migration directories
+     * @var boolean lookup all application migration paths  
      */
     public $disableLookup = false;
     /**
