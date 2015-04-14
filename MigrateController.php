@@ -490,8 +490,8 @@ class MigrateController extends Controller
                 echo "Found $n new " . ($n === 1 ? 'migration' : 'migrations') . ":\n";
             }
 
-            foreach ($migrations as $migration) {
-                echo "    " . $migration . "\n";
+            foreach ($migrations as $migration => $alias) {
+                echo "    " . $migration ." (" . $alias . ")" . "\n";
             }
         }
     }
