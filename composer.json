@@ -10,6 +10,9 @@
 			"email": "tobias@diemeisterei.de"
 		}
 	],
+	"require": {
+		"yiisoft/yii2": "*"
+	},
 	"autoload": {
 		"psr-4": {
 			"dmstr\\console\\controllers\\": ""
