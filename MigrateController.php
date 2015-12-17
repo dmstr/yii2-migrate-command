@@ -755,6 +755,11 @@ class MigrateController extends Controller
 
         foreach ($directories AS $alias) {
             $dir    = Yii::getAlias($alias);
+			if (!is_dir($dir))
+			{
+				echo " none " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
+				continue;
+			}
             $handle = opendir($dir);
             while (($file = readdir($handle)) !== false) {
                 if ($file === '.' || $file === '..') {
@@ -769,7 +774,7 @@ class MigrateController extends Controller
                 }
             }
             closedir($handle);
-            echo "    " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
+            echo "  ok  " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
         }
         ksort($migrations);
 
