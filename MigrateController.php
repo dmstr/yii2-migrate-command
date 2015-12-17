@@ -10,11 +10,12 @@
 namespace dmstr\console\controllers;
 
 use Yii;
-use yii\console\Exception;
 use yii\console\Controller;
+use yii\console\Exception;
 use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Console;
 use yii\helpers\FileHelper;
 
 /**
@@ -83,7 +84,7 @@ class MigrateController extends Controller
      */
     public $migrationLookup = [];
     /**
-     * @var boolean lookup all application migration paths  
+     * @var boolean lookup all application migration paths
      */
     public $disableLookup = false;
     /**
@@ -137,19 +138,21 @@ class MigrateController extends Controller
                     $this->db = Yii::$app->get($this->db);
                 }
                 if (!$this->db instanceof Connection) {
-                    throw new Exception("The 'db' option must refer to the application component ID of a DB connection.");
+                    throw new Exception(
+                        "The 'db' option must refer to the application component ID of a DB connection."
+                    );
                 }
             } else {
                 if (!is_dir($path)) {
-                    echo "\n$path does not exist, creating...";
+                    $this->stdout("\n$path does not exist, creating...");
                     FileHelper::createDirectory($path);
                 }
             }
 
             $version = Yii::getVersion();
-            echo "Yii Migration Tool (based on Yii v{$version})\n\n";
+            $this->stdout("Yii Migration Tool (based on Yii v{$version})\n\n", Console::BOLD);
             if (isset($this->db->dsn)) {
-                echo "Database Connection: " . $this->db->dsn . "\n";
+                $this->stdout("Database Connection: " . $this->db->dsn . "\n", Console::FG_BLUE);
             }
             return true;
         } else {
@@ -173,7 +176,7 @@ class MigrateController extends Controller
     {
         $migrations = $this->getNewMigrations();
         if (empty($migrations)) {
-            echo "No new migration found. Your system is up-to-date.\n";
+            $this->stdout("No new migration found. Your system is up-to-date.\n");
 
             return;
         }
@@ -204,7 +207,7 @@ class MigrateController extends Controller
                     return;
                 }
             }
-            echo "\nMigrated up successfully.\n";
+            $this->stdout("\nMigrated up successfully.\n", Console::FG_GREEN);
         }
     }
 
@@ -344,7 +347,9 @@ class MigrateController extends Controller
         } elseif (($time = strtotime($version)) !== false) {
             $this->migrateToTime($time);
         } else {
-            throw new Exception("The version argument must be either a timestamp (e.g. 101129_185401),\n the full name of a migration (e.g. m101129_185401_create_user_table),\n a UNIX timestamp (e.g. 1392853000), or a datetime string parseable\nby the strtotime() function (e.g. 2014-02-15 13:00:50).");
+            throw new Exception(
+                "The version argument must be either a timestamp (e.g. 101129_185401),\n the full name of a migration (e.g. m101129_185401_create_user_table),\n a UNIX timestamp (e.g. 1392853000), or a datetime string parseable\nby the strtotime() function (e.g. 2014-02-15 13:00:50)."
+            );
         }
     }
 
@@ -369,12 +374,14 @@ class MigrateController extends Controller
         if (preg_match('/^m?(\d{6}_\d{6})(_.*?)?$/', $version, $matches)) {
             $version = 'm' . $matches[1];
         } else {
-            throw new Exception("The version argument must be either a timestamp (e.g. 101129_185401)\nor the full name of a migration (e.g. m101129_185401_create_user_table).");
+            throw new Exception(
+                "The version argument must be either a timestamp (e.g. 101129_185401)\nor the full name of a migration (e.g. m101129_185401_create_user_table)."
+            );
         }
 
         // try mark up
         $migrations = $this->getNewMigrations();
-        $i          = 0;
+        $i = 0;
         foreach ($migrations as $migration => $alias) {
             $stack[$migration] = $alias;
             if (strpos($migration, $version . '_') === 0) {
@@ -384,8 +391,8 @@ class MigrateController extends Controller
                         $command->insert(
                             $this->migrationTable,
                             [
-                                'version'    => $applyMigration,
-                                'alias'      => $applyAlias,
+                                'version' => $applyMigration,
+                                'alias' => $applyAlias,
                                 'apply_time' => time(),
                             ]
                         )->execute();
@@ -443,7 +450,7 @@ class MigrateController extends Controller
      */
     public function actionHistory($limit = 10)
     {
-        $limit      = (int)$limit;
+        $limit = (int)$limit;
         $migrations = $this->getMigrationHistory($limit);
         if (empty($migrations)) {
             echo "No migration has been done before.\n";
@@ -477,7 +484,7 @@ class MigrateController extends Controller
      */
     public function actionNew($limit = 10)
     {
-        $limit      = (int)$limit;
+        $limit = (int)$limit;
         $migrations = $this->getNewMigrations();
         if (empty($migrations)) {
             echo "No new migrations found. Your system is up-to-date.\n";
@@ -491,7 +498,7 @@ class MigrateController extends Controller
             }
 
             foreach ($migrations as $migration => $alias) {
-                echo "    " . $migration ." (" . $alias . ")" . "\n";
+                echo "    " . $migration . " (" . $alias . ")" . "\n";
             }
         }
     }
@@ -542,14 +549,14 @@ class MigrateController extends Controller
         }
 
         echo "*** applying $class\n";
-        $start     = microtime(true);
+        $start = microtime(true);
         $migration = $this->createMigration($class, $alias);
         if ($migration->up() !== false) {
             $this->db->createCommand()->insert(
                 $this->migrationTable,
                 [
-                    'version'    => $class,
-                    'alias'      => $alias,
+                    'version' => $class,
+                    'alias' => $alias,
                     'apply_time' => time(),
                 ]
             )->execute();
@@ -579,7 +586,7 @@ class MigrateController extends Controller
         }
 
         echo "*** reverting $class\n";
-        $start     = microtime(true);
+        $start = microtime(true);
         $migration = $this->createMigration($class, $alias);
         if ($migration->down() !== false) {
             $this->db->createCommand()->delete(
@@ -622,7 +629,7 @@ class MigrateController extends Controller
      */
     protected function migrateToTime($time)
     {
-        $count      = 0;
+        $count = 0;
         $migrations = array_values($this->getMigrationHistory(-1));
         while ($count < count($migrations) && $migrations[$count] > $time) {
             ++$count;
@@ -647,7 +654,7 @@ class MigrateController extends Controller
 
         // try migrate up
         $migrations = $this->getNewMigrations();
-        $i          = 0;
+        $i = 0;
         foreach ($migrations as $migration => $alias) {
             if (strpos($migration, $version . '_') === 0) {
                 $this->actionUp($i + 1);
@@ -686,8 +693,8 @@ class MigrateController extends Controller
         if ($this->db->schema->getTableSchema($this->migrationTable, true) === null) {
             $this->createMigrationHistoryTable();
         }
-        $query   = new Query;
-        $rows    = $query->select(['version', 'alias', 'apply_time'])
+        $query = new Query;
+        $rows = $query->select(['version', 'alias', 'apply_time'])
             ->from($this->migrationTable)
             ->orderBy('apply_time DESC, version DESC')
             ->limit($limit)
@@ -712,16 +719,16 @@ class MigrateController extends Controller
         $this->db->createCommand()->createTable(
             $this->migrationTable,
             [
-                'version'    => 'varchar(180) NOT NULL PRIMARY KEY',
-                'alias'      => 'varchar(180) NOT NULL',
+                'version' => 'varchar(180) NOT NULL PRIMARY KEY',
+                'alias' => 'varchar(180) NOT NULL',
                 'apply_time' => 'integer',
             ]
         )->execute();
         $this->db->createCommand()->insert(
             $this->migrationTable,
             [
-                'version'    => self::BASE_MIGRATION,
-                'alias'      => $this->migrationPath,
+                'version' => self::BASE_MIGRATION,
+                'alias' => $this->migrationPath,
                 'apply_time' => time(),
             ]
         )->execute();
@@ -754,12 +761,13 @@ class MigrateController extends Controller
         echo "\nLookup:\n";
 
         foreach ($directories AS $alias) {
-            $dir    = Yii::getAlias($alias);
-			if (!is_dir($dir))
-			{
-				echo " none " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
-				continue;
-			}
+            $dir = Yii::getAlias($alias);
+            if (!is_dir($dir)) {
+                $label = $this->ansiFormat('[warn]', Console::BG_YELLOW);
+                $this->stdout(" {$label}  " . $alias . " (" . \Yii::getAlias($alias) . ")\n");
+                Yii::warning("Migration lookup directory '{$alias}' not found", __METHOD__);
+                continue;
+            }
             $handle = opendir($dir);
             while (($file = readdir($handle)) !== false) {
                 if ($file === '.' || $file === '..') {
@@ -774,11 +782,12 @@ class MigrateController extends Controller
                 }
             }
             closedir($handle);
-            echo "  ok  " . $alias . " (" . \Yii::getAlias($alias) . ")\n";
+            $label = $this->ansiFormat('[ok]', Console::FG_GREEN);
+            $this->stdout(" {$label}    " . $alias . " (" . \Yii::getAlias($alias) . ")\n");
         }
         ksort($migrations);
 
-        echo "\n";
+        $this->stdout("\n");
 
         return $migrations;
     }
