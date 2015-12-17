@@ -67,3 +67,7 @@ If you want to specify an additional path directly with the command, use
 ```
 
 > Note! Please make sure to **not use spaces** in the comma separated list.
+
+---
+
+Built by [dmstr](http://diemeisterei.de), Stuttgart

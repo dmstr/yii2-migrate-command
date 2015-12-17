@@ -3,7 +3,7 @@ CHANGELOG
 
 **dmstr/yii2-migrate-command**
 
-### 0.3.0-dev
+### 0.3.0
 
   - colorized output, code-formatting (@schmunk42)
   - sort history by apply_time first, then by version (@sblaut)
