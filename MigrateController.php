@@ -105,6 +105,10 @@ class MigrateController extends \yii\console\controllers\MigrateController
             $applied[substr($migration->migration, 1, 13)] = true;
         }
 
+        if (isset(\Yii::$app->params['yii.migrations'])) {
+            $this->migrationLookup = ArrayHelper::merge($this->migrationLookup, \Yii::$app->params['yii.migrations']);
+        }
+
         if ($this->migrationPath && $this->disableLookup) {
             $directories = [$this->migrationPath];
         } else {
