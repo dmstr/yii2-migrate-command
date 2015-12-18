@@ -14,7 +14,7 @@ Installation
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
 ```
-php composer.phar require dmstr/yii2-migrate-command "*"
+composer require dmstr/yii2-migrate-command "*"
 ```
 
 Usage
@@ -67,3 +67,7 @@ If you want to specify an additional path directly with the command, use
 ```
 
 > Note! Please make sure to **not use spaces** in the comma separated list.
+
+---
+
+Built by [dmstr](http://diemeisterei.de), Stuttgart

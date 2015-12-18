@@ -8,6 +8,7 @@
  */
 
 namespace dmstr\console\controllers;
+
 use yii\helpers\Console;
 
 /**
@@ -112,7 +113,6 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
         $migrations = [];
 
-
         $this->stdout("\nLookup:\n");
 
         foreach ($directories AS $alias) {
@@ -172,16 +172,21 @@ class MigrateController extends \yii\console\controllers\MigrateController
     {
         $tableName = $this->db->schema->getRawTableName($this->migrationTable);
         $this->stdout("Creating migration history table \"$tableName\"...", Console::FG_YELLOW);
-        $this->db->createCommand()->createTable($this->migrationTable, [
-            'version' => 'varchar(180) NOT NULL PRIMARY KEY',
-            'alias' => 'varchar(180) NOT NULL',
-            'apply_time' => 'integer',
-        ])->execute();
-        $this->db->createCommand()->insert($this->migrationTable, [
-            'version' => self::BASE_MIGRATION,
-            'alias' => $this->migrationPath,
-            'apply_time' => time(),
-        ])->execute();
+        $this->db->createCommand()->createTable(
+            $this->migrationTable,
+            [
+                'version' => 'varchar(180) NOT NULL PRIMARY KEY',
+                'alias' => 'varchar(180) NOT NULL',
+                'apply_time' => 'integer',
+            ]
+        )->execute();
+        $this->db->createCommand()->insert(
+            $this->migrationTable, [
+                'version' => self::BASE_MIGRATION,
+                'alias' => $this->migrationPath,
+                'apply_time' => time(),
+            ]
+        )->execute();
         $this->stdout("Done.\n", Console::FG_GREEN);
     }
 
