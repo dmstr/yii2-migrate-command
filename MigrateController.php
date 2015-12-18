@@ -9,6 +9,7 @@
 
 namespace dmstr\console\controllers;
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 
 /**
@@ -112,7 +113,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         if ($this->migrationPath && $this->disableLookup) {
             $directories = [$this->migrationPath];
         } else {
-            $directories = \yii\helpers\ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
+            $directories = ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
         }
 
         $migrations = [];
@@ -122,6 +123,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
         foreach ($directories AS $alias) {
             $dir = \Yii::getAlias($alias);
             $handle = opendir($dir);
+
+            // TODO: improve check, handle may be `false` if there was an error with the directory
+            if (!$handle) {
+                continue;
+            }
 
             while (($file = readdir($handle)) !== false) {
                 if ($file === '.' || $file === '..') {
