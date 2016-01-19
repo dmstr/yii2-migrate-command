@@ -694,6 +694,9 @@ class MigrateController extends Controller
             $this->createMigrationHistoryTable();
         }
         $query = new Query;
+        if ($this->disableLookup === true) {
+            $query->where(['alias' => $this->migrationPath]);
+        }
         $rows = $query->select(['version', 'alias', 'apply_time'])
             ->from($this->migrationTable)
             ->orderBy('apply_time DESC, version DESC')
