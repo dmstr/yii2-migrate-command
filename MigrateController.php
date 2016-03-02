@@ -753,10 +753,17 @@ class MigrateController extends Controller
             $this->migrationLookup = ArrayHelper::merge($this->migrationLookup, \Yii::$app->params['yii.migrations']);
         }
 
+        $trimPath = function ($path) {
+            return rtrim(Yii::getAlias($path), DIRECTORY_SEPARATOR);
+        };
+        $directories = array_map($trimPath, $this->migrationLookup);
+
         if ($this->migrationPath && $this->disableLookup) {
             $directories = [$this->migrationPath];
-        } else {
+        } elseif (!in_array($trimPath($this->migrationPath), $directories)) {
             $directories = ArrayHelper::merge([$this->migrationPath], $this->migrationLookup);
+        }else{
+            $directories = $this->migrationLookup;
         }
 
         $migrations = [];
