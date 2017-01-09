@@ -14,5 +14,8 @@
 		"psr-4": {
 			"dmstr\\console\\controllers\\": ""
 		}
+	},
+	"require": {
+		"yiisoft/yii2": "<2.0.10"
 	}
 }
