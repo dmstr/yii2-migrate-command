@@ -3,6 +3,10 @@ CHANGELOG
 
 **dmstr/yii2-migrate-command**
 
+### 0.4.0-beta1
+
+  - updated Yii constraint (experimental), see also https://github.com/yiisoft/yii2/issues/13356
+
 ### 0.3.0
 
   - colorized output, code-formatting (@schmunk42)
