@@ -1,6 +1,10 @@
 Extended Migration Command
 ==========================
 
+[![Latest Stable Version](https://poser.pugx.org/dmstr/yii2-migrate-command/v/stable.svg)](https://packagist.org/packages/dmstr/yii2-migrate-command) 
+[![Total Downloads](https://poser.pugx.org/dmstr/yii2-migrate-command/downloads.svg)](https://packagist.org/packages/dmstr/yii2-migrate-command)
+[![License](https://poser.pugx.org/dmstr/yii2-migrate-command/license.svg)](https://packagist.org/packages/dmstr/yii2-migrate-command)
+
 Console Migration Command with multiple paths/aliases support
 
 This extension was created from this [Pull Request](https://github.com/yiisoft/yii2/pull/3273) on GitHub, which became unmergeable.
