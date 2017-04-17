@@ -203,7 +203,7 @@ class MigrateController extends Controller
             foreach ($migrations as $migration => $alias) {
                 if (!$this->migrateUp($migration, $alias)) {
                     echo "\nMigration failed. The rest of the migrations are canceled.\n";
-
+                    $this->stdout(-1);
                     return;
                 }
             }
@@ -250,7 +250,7 @@ class MigrateController extends Controller
             foreach ($migrations as $migration => $info) {
                 if (!$this->migrateDown($migration, $info['alias'])) {
                     echo "\nMigration failed. The rest of the migrations are canceled.\n";
-
+                    $this->stdout(-1);
                     return;
                 }
             }
@@ -299,14 +299,14 @@ class MigrateController extends Controller
             foreach ($migrations as $migration => $info) {
                 if (!$this->migrateDown($migration, $info['alias'])) {
                     echo "\nMigration failed. The rest of the migrations are canceled.\n";
-
+                    $this->stdout(-1);
                     return;
                 }
             }
             foreach (array_reverse($migrations) as $migration => $info) {
                 if (!$this->migrateUp($migration, $info['alias'])) {
                     echo "\nMigration failed. The rest of the migrations migrations are canceled.\n";
-
+                    $this->stdout(-1);
                     return;
                 }
             }
