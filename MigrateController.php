@@ -178,7 +178,7 @@ class MigrateController extends Controller
         if (empty($migrations)) {
             $this->stdout("No new migration found. Your system is up-to-date.\n");
 
-            return;
+            return self::EXIT_CODE_NORMAL;
         }
 
         $total = count($migrations);
@@ -203,8 +203,8 @@ class MigrateController extends Controller
             foreach ($migrations as $migration => $alias) {
                 if (!$this->migrateUp($migration, $alias)) {
                     echo "\nMigration failed. The rest of the migrations are canceled.\n";
-
-                    return;
+                    
+                    return self::EXIT_CODE_ERROR;
                 }
             }
             $this->stdout("\nMigrated up successfully.\n", Console::FG_GREEN);
@@ -236,7 +236,7 @@ class MigrateController extends Controller
         if (empty($migrations)) {
             echo "No migration has been done before.\n";
 
-            return;
+            return self::EXIT_CODE_NORMAL;
         }
 
         $n = count($migrations);
@@ -250,8 +250,8 @@ class MigrateController extends Controller
             foreach ($migrations as $migration => $info) {
                 if (!$this->migrateDown($migration, $info['alias'])) {
                     echo "\nMigration failed. The rest of the migrations are canceled.\n";
-
-                    return;
+                    
+                    return self::EXIT_CODE_ERROR;
                 }
             }
             echo "\nMigrated down successfully.\n";
@@ -285,7 +285,7 @@ class MigrateController extends Controller
         if (empty($migrations)) {
             echo "No migration has been done before.\n";
 
-            return;
+            return self::EXIT_CODE_NORMAL;
         }
 
         $n = count($migrations);
@@ -299,15 +299,15 @@ class MigrateController extends Controller
             foreach ($migrations as $migration => $info) {
                 if (!$this->migrateDown($migration, $info['alias'])) {
                     echo "\nMigration failed. The rest of the migrations are canceled.\n";
-
-                    return;
+                    
+                    return self::EXIT_CODE_ERROR;
                 }
             }
             foreach (array_reverse($migrations) as $migration => $info) {
                 if (!$this->migrateUp($migration, $info['alias'])) {
                     echo "\nMigration failed. The rest of the migrations migrations are canceled.\n";
-
-                    return;
+                    
+                    return self::EXIT_CODE_ERROR;
                 }
             }
             echo "\nMigration redone successfully.\n";
@@ -400,7 +400,7 @@ class MigrateController extends Controller
                     echo "The migration history is set at $originalVersion.\nNo actual migration was performed.\n";
                 }
 
-                return;
+                return self::EXIT_CODE_NORMAL;
             }
             $i++;
         }
@@ -426,7 +426,7 @@ class MigrateController extends Controller
                     }
                 }
 
-                return;
+                return self::EXIT_CODE_NORMAL;
             }
         }
 
@@ -465,6 +465,7 @@ class MigrateController extends Controller
                 echo "    (" . date('Y-m-d H:i:s', $info['apply_time']) . ') ' . $version . "\n";
             }
         }
+        return self::EXIT_CODE_NORMAL;
     }
 
     /**
@@ -501,6 +502,7 @@ class MigrateController extends Controller
                 echo "    " . $migration . " (" . $alias . ")" . "\n";
             }
         }
+        return self::EXIT_CODE_NORMAL;
     }
 
     /**
@@ -533,6 +535,7 @@ class MigrateController extends Controller
             file_put_contents(Yii::getAlias($file), $content);
             echo "New migration created successfully.\n";
         }
+        return self::EXIT_CODE_NORMAL;
     }
 
     /**
