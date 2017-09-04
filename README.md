@@ -1,6 +1,10 @@
 Extended Migration Command
 ==========================
 
+**DEPRECATION NOTICE - since Yii 2.0.12 this extension is obsolete, its functionality is now supported by the framework core.**
+
+---
+
 [![Latest Stable Version](https://poser.pugx.org/dmstr/yii2-migrate-command/v/stable.svg)](https://packagist.org/packages/dmstr/yii2-migrate-command) 
 [![Total Downloads](https://poser.pugx.org/dmstr/yii2-migrate-command/downloads.svg)](https://packagist.org/packages/dmstr/yii2-migrate-command)
 [![License](https://poser.pugx.org/dmstr/yii2-migrate-command/license.svg)](https://packagist.org/packages/dmstr/yii2-migrate-command)
