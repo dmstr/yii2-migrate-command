@@ -1,7 +1,7 @@
 Extended Migration Command
 ==========================
 
-**DEPRECATION NOTICE - since Yii 2.0.12 this extension is obsolete, its functionality is now supported by the framework core.**
+**DEPRECATION NOTICE - since Yii 2.0.12 this extension is obsolete, its functionality is now supported by the framework core.** For details see also [issue](https://github.com/dmstr/yii2-migrate-command/issues/23#issuecomment-326950039).
 
 ---
 
